@@ -1,4 +1,4 @@
 # PythonWebScraping
 PR301 Assignment
 
-This is my readme file 
+12/8- Added both my inital practice with webscrpaing (lxml) as well as a tidier version using BeautifulSoup, with each catergory sorted into classes

@@ -4,29 +4,25 @@ from lxml import html
 page = requests.get('http://www.fishpond.co.nz/Books/Fiction_Literature')
 tree = html.fromstring(page.content)
 
-productName = tree.xpath('//a[@class="blue_link fn url"]/text()')
-print(productName)
+for productName in tree.xpath('//a[@class="blue_link fn url"]/text()'):
+    print('Product name: ', productName)
 
-isbn = tree.xpath('//input[@name="barcode"]/@value')
-print(isbn)
 
-publishingDate = tree.xpath('//div[@class="productSearch-metainfo"]/text()')
-print(publishingDate)
+for isbn in tree.xpath('//input[@name="barcode"]/@value'):
+    print('ISBN: ', isbn)
+
+for publishingDate in tree.xpath('//div[@class="productSearch-metainfo"]/text()'):
+    print( publishingDate)
 
 for normalPrice in tree.xpath('//s'):
-    print(normalPrice.text_content())
+    print('RRP:  ', normalPrice.text_content())
+
 
 for salePrice in tree.xpath('//span[@class="productSpecialPrice"]//s'):
     print('Sale Price: ', salePrice)
 
-print("BREAK")
+for savings in tree.xpath('//span[@class="you_save"]/text()'):
+    print('Savings: ', savings)
 
-salePrice = tree.xpath('//span[@class="productSpecialPrice"]//s')
-print(salePrice)
-
-
-savings = tree.xpath('//span[@class="you_save"]/text()')
-print(savings)
-
-photoLink = tree.xpath('//img[@class="photo"]/@src')
-print(photoLink)
+for photoLink in tree.xpath('//img[@class="photo"]/@src'):
+    print('Product Image: ', photoLink)

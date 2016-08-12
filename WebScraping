@@ -1,0 +1,32 @@
+import requests
+from lxml import html
+
+page = requests.get('http://www.fishpond.co.nz/Books/Fiction_Literature')
+tree = html.fromstring(page.content)
+
+productName = tree.xpath('//a[@class="blue_link fn url"]/text()')
+print(productName)
+
+isbn = tree.xpath('//input[@name="barcode"]/@value')
+print(isbn)
+
+publishingDate = tree.xpath('//div[@class="productSearch-metainfo"]/text()')
+print(publishingDate)
+
+for normalPrice in tree.xpath('//s'):
+    print(normalPrice.text_content())
+
+for salePrice in tree.xpath('//span[@class="productSpecialPrice"]//s'):
+    print('Sale Price: ', salePrice)
+
+print("BREAK")
+
+salePrice = tree.xpath('//span[@class="productSpecialPrice"]//s')
+print(salePrice)
+
+
+savings = tree.xpath('//span[@class="you_save"]/text()')
+print(savings)
+
+photoLink = tree.xpath('//img[@class="photo"]/@src')
+print(photoLink)

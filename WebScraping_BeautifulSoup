@@ -1,0 +1,75 @@
+import re
+from matplotlib import pyplot as plt
+from bs4 import BeautifulSoup
+import requests
+
+url = "http://" + 'www.fishpond.co.nz/Books/Fiction_Literature'
+r  = requests.get(url)
+data = r.text
+soup = BeautifulSoup(r.content, "lxml")
+
+
+productNameResults = []
+class productName():
+    for productName in soup.find_all("a",{"class" : "blue_link fn url"}):
+        global productNameResults
+        productNameResults.append(productName.text)
+
+productName()
+print("Product name: ", productNameResults)
+
+
+isbnResults = []
+def isbn():
+    global isbnResults
+    for isbn in soup.find_all("input",{"name" : "barcode"}):
+        isbnResults.append(isbn['value'])
+
+isbn()
+print("ISBN: " ,isbnResults)
+
+publishingDateResults = []
+class publishingDate():
+    global publishingDateResults
+    for publishingDate in soup.find_all("div",{"class" : "productSearch-metainfo"}):
+        publishingDateResults.append(publishingDate.text.split(',', 1)[-1])
+
+publishingDate()
+print('Publishing Date: ',publishingDateResults)
+
+
+normalPriceResults = []
+class normalPrice():
+    global normalPriceResults
+    for normalPrice in soup.find_all('s'):
+        normalPriceResults.append(normalPrice.text[1:])
+
+normalPrice()
+print('Normal Price: ',normalPriceResults)
+
+salePriceResults = []
+class salePrice():
+    global salePriceResults
+    for salePrice in soup.find_all("span",{"class" : "productSpecialPrice"}):
+        salePriceResults.append(salePrice.text[1:])
+
+salePrice()
+print('Sale Price: ', salePriceResults)
+
+savingsResults = []
+def savings():
+    global savingsResults
+    for savings in soup.find_all("span",{"class" : "you_save"}):
+        savingsResults.append(savings.text[-4:-2])
+
+savings()
+print('Savings Price: ', savingsResults)
+
+photoLinkResults = []
+class photoLink():
+    global photoLinkResults
+    for photoLink in soup.find_all("img",{"class" : "photo"}):
+        photoLinkResults.append(photoLink['src'])
+
+photoLink()
+print('Product Photo: ',photoLinkResults)

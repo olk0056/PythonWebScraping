@@ -1,4 +1,3 @@
-import re
 from bs4 import BeautifulSoup
 import requests
 
@@ -9,81 +8,67 @@ soup = BeautifulSoup(r.content, "lxml")
 
 
 productNameResults = []
-
-
-class productName():
-    for productName in soup.find_all("a", {"class": "blue_link fn url"}):
-        global productNameResults
-        productNameResults.append(productName.text)
-
-productName()
-print("Product name: ", productNameResults)
-
-
 isbnResults = []
-
-
-def isbn():
-    global isbnResults
-    for isbn in soup.find_all("input", {"name": "barcode"}):
-        isbnResults.append(isbn['value'])
-
-isbn()
-print("ISBN: ", isbnResults)
-
 publishingDateResults = []
-
-
-class publishingDate():
-    global publishingDateResults
-    for publishingDate in soup.find_all("div", 
-                                        {"class": "productSearch-metainfo"}):
-        publishingDateResults.append(publishingDate.text.split(',', 1)[-1])
-
-publishingDate()
-print('Publishing Date: ', publishingDateResults)
-
-
 normalPriceResults = []
-
-
-class normalPrice():
-    global normalPriceResults
-    for normalPrice in soup.find_all('s'):
-        normalPriceResults.append(normalPrice.text[1:])
-
-normalPrice()
-print('Normal Price: ', normalPriceResults)
-
 salePriceResults = []
-
-
-class salePrice():
-    global salePriceResults
-    for salePrice in soup.find_all("span", {"class": "productSpecialPrice"}):
-        salePriceResults.append(salePrice.text[1:])
-
-salePrice()
-print('Sale Price: ', salePriceResults)
-
 savingsResults = []
-
-
-def savings():
-    global savingsResults
-    for savings in soup.find_all("span", {"class": "you_save"}):
-        savingsResults.append(savings.text[-4:-2])
-
-savings()
-print('Savings Price: ', savingsResults)
-
 photoLinkResults = []
 
+class webScraping(object):
 
-class photoLink():
-    global photoLinkResults
-    for photoLink in soup.find_all("img", {"class": "photo"}):
-        photoLinkResults.append(photoLink['src'])
+    def productName(self):
+        global productNameResults
+        for productName in soup.find_all("a", {"class": "blue_link fn url"}):
+            productNameResults.append(productName.text)
+        print("Product name: ", productNameResults)
+        return productNameResults
 
-photoLink()
-print('Product Photo: ', photoLinkResults)
+
+    def isbn(self):
+        global isbnResults
+        for isbn in soup.find_all("input", {"name": "barcode"}):
+            isbnResults.append(isbn['value'])
+        print("ISBN:  ", isbnResults)
+        return isbnResults
+
+
+    def publishingDate(self):
+        global publishingDateResults
+        for publishingDate in soup.find_all("div",
+                                         {"class": "productSearch-metainfo"}):
+         publishingDateResults.append(publishingDate.text.split(',', 1)[-1])
+        print('Publishing Date: ', publishingDateResults)
+        return publishingDateResults
+
+
+    def normalPrice(self):
+        global normalPriceResults
+        for normalPrice in soup.find_all('s'):
+            normalPriceResults.append(normalPrice.text[1:])
+        print('Normal Price: ', normalPriceResults)
+        return normalPriceResults
+
+
+    def salePrices(self):
+        global salePriceResults
+        for salePrice in soup.find_all("span", {"class": "productSpecialPrice"}):
+            salePriceResults.append(salePrice.text[1:])
+        print('Sale Price: ', salePriceResults)
+        return salePriceResults
+
+
+    def savingTotal(self):
+        global savingsResults
+        for savings in soup.find_all("span", {"class": "you_save"}):
+            savingsResults.append(savings.text[-4:-2])
+        print('Savings Price: ', savingsResults)
+        return savingsResults
+
+
+    def photoLink(self):
+        global photoLinkResults
+        for photoLink in soup.find_all("img", {"class": "photo"}):
+            photoLinkResults.append(photoLink['src'])
+        print('Product Photo: ', photoLinkResults)
+        return photoLinkResults

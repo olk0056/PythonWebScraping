@@ -1,0 +1,122 @@
+import cmd
+from scraping import webScraping
+
+class Quitter(cmd.Cmd, webScraping):
+    """
+    Web Scraping CMD
+    """
+
+    def __init__(self):
+        cmd.Cmd.__init__(self)
+        self.prompt = ">>>"
+        self.cmdloop('Starting command prompt...')
+
+
+    def do_product(self, webScraping):
+        """
+           List of all scraped product names, as list
+           :return: Product Name
+           """
+        product = webScraping()
+        product.productName()
+        print("Product name: ", webScraping.productNameResults)
+
+
+    def do_isbn(self, webScraping):
+        """
+           List of all scraped product ISBN's, as list
+           :return: Book ISBN
+           """
+        isbns = webScraping.isbnNumber()
+        isbns.isbn()
+        print("ISBN: ", webScraping.isbnResults)
+
+
+    def do_savings(self, webScraping):
+        """
+            List of all scraped savings, as list
+           :return: Savings
+        """
+        savings = webScraping.savingTotals()
+        savings.savingTotal()
+        print('Savings Price: ', webScraping.savingsResults)
+
+
+    def do_publish(self, webScraping):
+        """
+           List of all scraped product's Publishing Date, as list
+           :return: Publishing Date
+           """
+        dates = webScraping.publishingDates()
+        dates.publishingDate()
+        print('Publishing Date: ', webScraping.publishingDateResults)
+
+
+    def do_normal(self, webScraping):
+        """
+           List of all scraped product RRP, as list
+           :return: RRP
+           """
+        normal = webScraping.normalPrices()
+        normal.normalPrice()
+        print('Normal Price: ', webScraping.normalPriceResults)
+
+
+    def do_sale(self, webScraping):
+        """
+           List of all scraped product's Sale Price, as list
+           :return: Sale Price
+           """
+        sale = webScraping.salePrices()
+        sale.salePrices()
+        print('Sale Price: ', webScraping.salePriceResults)
+
+    def do_image(self, ws):
+        """
+            List of all scraped product's relevant image, as url list
+           :return: Product's Image
+           """
+        photo = ws.photoLink()
+        photo.photoLinks()
+        print('Product Photo: ', ws.photoLinkResults)
+
+    def do_quit(self):
+        """
+        Quit from my CMD
+        :return: True
+        """
+        print("Quitting ......")
+        return True
+
+    def do_setURL(self, webScraping):
+        """
+        Set URL of Fishpond page to scrap information from
+        :return: Input
+        """
+        input("Please enter a Fishpond URL")
+        return input
+
+
+    def help_quit(self):
+        print('\n'.join(['Quit from my CMD', ':return: True']))
+
+    def do_saveFile(self):
+        """
+        Saves information scraped to txt file
+        :return: None
+        """
+        input("Please enter a Fishpond URL")
+        return input
+
+    def do_loadFile(self):
+        """
+        Loads data from previously saved file
+        :return: Data
+        """
+        input("Please enter a Fishpond URL")
+        return input
+
+if __name__ == '__main__':
+    prompt = Quitter()
+    prompt.prompt = '> '
+    prompt.cmdloop('Starting prompt...')

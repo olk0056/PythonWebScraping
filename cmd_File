@@ -14,71 +14,66 @@ class Quitter(cmd.Cmd, webScraping):
 
     def do_product(self, webScraping):
         """
-           List of all scraped product names, as list
-           :return: Product Name
-           """
-        product = webScraping()
-        product.productName()
-        print("Product name: ", webScraping.productNameResults)
+        List of all scraped product names, as list
+        :return: Product Name
+         """
+        from scraping import webScraping
+        webScraping.productName(self)
 
 
     def do_isbn(self, webScraping):
         """
-           List of all scraped product ISBN's, as list
-           :return: Book ISBN
-           """
-        isbns = webScraping.isbnNumber()
-        isbns.isbn()
-        print("ISBN: ", webScraping.isbnResults)
+        List of all scraped product ISBN's, as list
+        :return: Book ISBN
+        """
+        from scraping import webScraping
+        webScraping.isbn(self)
 
 
     def do_savings(self, webScraping):
         """
-            List of all scraped savings, as list
-           :return: Savings
+        List of all scraped savings, as list
+        :return: Savings
         """
-        savings = webScraping.savingTotals()
-        savings.savingTotal()
-        print('Savings Price: ', webScraping.savingsResults)
+        from scraping import webScraping
+        webScraping.savingTotal(self)
 
 
     def do_publish(self, webScraping):
         """
-           List of all scraped product's Publishing Date, as list
-           :return: Publishing Date
-           """
-        dates = webScraping.publishingDates()
-        dates.publishingDate()
-        print('Publishing Date: ', webScraping.publishingDateResults)
+        List of all scraped product's Publishing Date, as list
+        :return: Publishing Date
+        """
+        from scraping import webScraping
+        webScraping.publishingDate(self)
 
 
     def do_normal(self, webScraping):
         """
-           List of all scraped product RRP, as list
-           :return: RRP
-           """
-        normal = webScraping.normalPrices()
-        normal.normalPrice()
-        print('Normal Price: ', webScraping.normalPriceResults)
+        List of all scraped product RRP, as list
+        :return: RRP
+        """
+        from scraping import webScraping
+        webScraping.normalPrice(self)
 
 
     def do_sale(self, webScraping):
         """
-           List of all scraped product's Sale Price, as list
-           :return: Sale Price
-           """
-        sale = webScraping.salePrices()
-        sale.salePrices()
-        print('Sale Price: ', webScraping.salePriceResults)
+        List of all scraped product's Sale Price, as list
+        :return: Sale Price
+        """
+        from scraping import webScraping
+        webScraping.salePrices(self)
+
 
     def do_image(self, ws):
         """
-            List of all scraped product's relevant image, as url list
-           :return: Product's Image
-           """
-        photo = ws.photoLink()
-        photo.photoLinks()
-        print('Product Photo: ', ws.photoLinkResults)
+        List of all scraped product's relevant image, as url list
+        :return: Product's Image
+        """
+        from scraping import webScraping
+        webScraping.photoLink(self)
+
 
     def do_quit(self):
         """
@@ -87,6 +82,7 @@ class Quitter(cmd.Cmd, webScraping):
         """
         print("Quitting ......")
         return True
+
 
     def do_setURL(self, webScraping):
         """
@@ -105,16 +101,15 @@ class Quitter(cmd.Cmd, webScraping):
         Saves information scraped to txt file
         :return: None
         """
-        input("Please enter a Fishpond URL")
-        return input
+        # THIS NEEDS DOING
+
 
     def do_loadFile(self):
         """
         Loads data from previously saved file
         :return: Data
         """
-        input("Please enter a Fishpond URL")
-        return input
+        #THIS NEEDS DOING
 
 if __name__ == '__main__':
     prompt = Quitter()

@@ -1,7 +1,9 @@
 import cmd
-from scraping import webScraping
+from scraping import Webscraping
+import os.path
+import pickle
 
-class Quitter(cmd.Cmd, webScraping):
+class HelpCMD(cmd.Cmd, Webscraping):
     """
     Web Scraping CMD
     """
@@ -17,8 +19,8 @@ class Quitter(cmd.Cmd, webScraping):
         List of all scraped product names, as list
         :return: Product Name
          """
-        from scraping import webScraping
-        webScraping.productName(self)
+        from scraping import Webscraping
+        Webscraping.productName(self)
 
 
     def do_isbn(self, webScraping):
@@ -26,8 +28,8 @@ class Quitter(cmd.Cmd, webScraping):
         List of all scraped product ISBN's, as list
         :return: Book ISBN
         """
-        from scraping import webScraping
-        webScraping.isbn(self)
+        from scraping import Webscraping
+        Webscraping.isbn(self)
 
 
     def do_savings(self, webScraping):
@@ -35,8 +37,8 @@ class Quitter(cmd.Cmd, webScraping):
         List of all scraped savings, as list
         :return: Savings
         """
-        from scraping import webScraping
-        webScraping.savingTotal(self)
+        from scraping import Webscraping
+        Webscraping.savingTotal(self)
 
 
     def do_publish(self, webScraping):
@@ -44,8 +46,8 @@ class Quitter(cmd.Cmd, webScraping):
         List of all scraped product's Publishing Date, as list
         :return: Publishing Date
         """
-        from scraping import webScraping
-        webScraping.publishingDate(self)
+        from scraping import Webscraping
+        Webscraping.publishingDate(self)
 
 
     def do_normal(self, webScraping):
@@ -53,8 +55,8 @@ class Quitter(cmd.Cmd, webScraping):
         List of all scraped product RRP, as list
         :return: RRP
         """
-        from scraping import webScraping
-        webScraping.normalPrice(self)
+        from scraping import Webscraping
+        Webscraping.normalPrice(self)
 
 
     def do_sale(self, webScraping):
@@ -62,17 +64,17 @@ class Quitter(cmd.Cmd, webScraping):
         List of all scraped product's Sale Price, as list
         :return: Sale Price
         """
-        from scraping import webScraping
-        webScraping.salePrices(self)
+        from scraping import Webscraping
+        Webscraping.salePrices(self)
 
 
-    def do_image(self, ws):
+    def do_image(self, webScraping):
         """
         List of all scraped product's relevant image, as url list
         :return: Product's Image
         """
-        from scraping import webScraping
-        webScraping.photoLink(self)
+        from scraping import Webscraping
+        Webscraping.photoLink(self)
 
 
     def do_quit(self):
@@ -96,22 +98,52 @@ class Quitter(cmd.Cmd, webScraping):
     def help_quit(self):
         print('\n'.join(['Quit from my CMD', ':return: True']))
 
-    def do_saveFile(self):
+    def do_savefile(self,webScraping):
         """
         Saves information scraped to txt file
+        :data types: Product Name, ISBN, Publish Date, Normal Price,
+                    Sale Price, Savings, Photos, All
         :return: None
         """
-        # THIS NEEDS DOING
+        results = Webscraping()
+        save_path = input("What is the directory?: ")
+        name_of_file = input("What is the name of the file: ")
+        type = input("What data type do you want to save?: ")
+        if type == 'Product Name':
+            save = results.productName()
+        elif type == 'ISBN':
+            save = results.isbn()
+        elif type == "Publish Date":
+            save = results.publishingDate()
+        elif type == 'Normal Price':
+            save = results.normalPrice()
+        elif type == 'Sale Price':
+            save = results.salePrices()
+        elif type == 'Savings':
+            save = results.savingTotal()
+        elif type == 'Photos':
+            save = results.photoLink()
+        elif type == "Save all":
+            save = results.productName(), results.isbn(), results.normalPrice(), results.salePrices(),
+            results.savingTotal(), results.photoLink()
+        complete_name = os.path.join(save_path, name_of_file + ".txt")
+        file1 = open(complete_name, "wb")
+        pickle.dump(save, file1)
+        file1.close()
 
 
-    def do_loadFile(self):
+    def do_loadfile(self,webScraping):
         """
         Loads data from previously saved file
         :return: Data
         """
-        #THIS NEEDS DOING
+        infile = input("Please enter the file location: ")
+        f = open(infile, 'rb')
+        results = pickle.load(f)
+        print(results)
+        f.close()
 
 if __name__ == '__main__':
-    prompt = Quitter()
+    prompt = HelpCMD()
     prompt.prompt = '> '
     prompt.cmdloop('Starting prompt...')

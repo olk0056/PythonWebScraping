@@ -4,15 +4,16 @@ import requests
 class Urlsetter(object):
     url = "http://www.fishpond.co.nz/Books/Fiction_Literature"
     r = requests.get(url)
-    data = r.text
     soup = BeautifulSoup(r.content, "lxml")
 
+
+#GET THIS WORKING, HOW TO PASS
 class Webscraping(Urlsetter):
 
-    def productName(self):
+    def product_name(self):
         product_name_results = []
-        for productName in Urlsetter.soup.find_all("a", {"class": "blue_link fn url"}):
-            product_name_results.append(productName.text)
+        for product_name in Urlsetter.soup.find_all("a", {"class": "blue_link fn url"}):
+            product_name_results.append(product_name.text)
         try:
             product_name_results[0]
         except IndexError:
@@ -27,15 +28,16 @@ class Webscraping(Urlsetter):
         try:
             isbn_results[0]
         except IndexError:
-            print("No ISBN found")
+            print("No ISBN valid found")
         return isbn_results
 
 
-    def publishingDate(self):
+
+    def publishing_date(self):
         publishing_date_results = []
-        for publishingDate in Urlsetter.soup.find_all("div",
+        for dates in Urlsetter.soup.find_all("div",
                                          {"class": "productSearch-metainfo"}):
-         publishing_date_results.append(publishingDate.text.split(',', 1)[-1])
+         publishing_date_results.append(dates.text.split(',', 1)[-1])
         try:
             publishing_date_results[0]
         except IndexError:
@@ -46,7 +48,7 @@ class Webscraping(Urlsetter):
     def RRP(self):
         rrp_results = []
         for rrp in Urlsetter.soup.find_all('s'):
-            rrp_results.append(rrp.text[1:])
+            rrp_results.append(rrp.text)
         try:
             rrp_results[0]
         except IndexError:
@@ -54,10 +56,10 @@ class Webscraping(Urlsetter):
         return rrp_results
 
 
-    def salePrices(self):
+    def sale_prices(self):
         sale_price_results = []
         for salePrice in Urlsetter.soup.find_all("span", {"class": "productSpecialPrice"}):
-            sale_price_results.append(salePrice.text[1:])
+            sale_price_results.append(salePrice.text)
         try:
             sale_price_results[0]
         except IndexError:
@@ -65,7 +67,7 @@ class Webscraping(Urlsetter):
         return sale_price_results
 
 
-    def savingTotal(self):
+    def saving_total(self):
         savings_results = []
         for savings in Urlsetter.soup.find_all("span", {"class": "you_save"}):
             savings_results.append(savings.text.partition('(')[-1].rpartition('%')[0])
@@ -76,7 +78,7 @@ class Webscraping(Urlsetter):
         return savings_results
 
 
-    def photoLink(self):
+    def photo_link(self):
         photo_link_results = []
         for photoLink in Urlsetter.soup.find_all("img", {"class": "photo"}):
             photo_link_results.append(photoLink['src'])

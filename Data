@@ -10,12 +10,12 @@ class Data(Webscraping):
         x1 = []
         count1 = 0
         intlist = [float(x) for x in webScraping.RRP()]
-        salePriceInt = [float(x) for x in webScraping.salePrices()]
+        salePriceInt = [float(x) for x in webScraping.sale_prices()]
         while count < len(webScraping.RRP()):
             count += 1
             x.append(count)
 
-        while count1 < len(webScraping.salePrices()):
+        while count1 < len(webScraping.sale_prices()):
             count1 += 1
             x1.append(count1)
         plt.figure(num=None, figsize=(10, 10), dpi=80, facecolor='w', edgecolor='k')
@@ -41,8 +41,8 @@ class Data(Webscraping):
     def total_savings_data(webScraping):
         count = 0
         x = []
-        intlist = [int(x) for x in webScraping.savingTotal()]
-        while count < len(webScraping.savingTotal()):
+        intlist = [int(x) for x in webScraping.saving_total()]
+        while count < len(webScraping.saving_total()):
                 count += 1
                 x.append(count)
         plt.figure(num=None, figsize=(8, 8), dpi=80, facecolor='w', edgecolor='k')
@@ -72,7 +72,7 @@ class Data(Webscraping):
         November = []
         December = []
 
-        result = re.findall(r"(?i)\b[a-z]+\b", str(webScraping.publishingDate()))
+        result = re.findall(r"(?i)\b[a-z]+\b", str(webScraping.publishing_date()))
         for strings in result:
             if strings == "January":
                         January.append(1)

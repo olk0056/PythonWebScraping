@@ -20,7 +20,7 @@ class HelpCMD(cmd.Cmd, Webscraping):
         List of all scraped product names, as list
         :return: Product Name
          """
-        print("Product name: ", Webscraping.productName(self))
+        print("Product name: ", Webscraping.product_name(self))
 
 
 
@@ -38,14 +38,14 @@ class HelpCMD(cmd.Cmd, Webscraping):
         List of all scraped savings, as list
         :return: Savings
         """
-        print('Savings: ',  Webscraping.savingTotal(self))
+        print('Savings: ', Webscraping.saving_total(self))
 
     def do_publish(self, webScraping):
         """
         List of all scraped product's Publishing Date, as list
         :return: Publishing Date
         """
-        print('Publishing Date: ', Webscraping.publishingDate(self))
+        print('Publishing Date: ', Webscraping.publishing_date(self))
 
 
     def do_rrp(self, webScraping):
@@ -61,7 +61,7 @@ class HelpCMD(cmd.Cmd, Webscraping):
         List of all scraped product's Sale Price, as list
         :return: Sale Price
         """
-        print('Sale Price ($): ', Webscraping.salePrices(self))
+        print('Sale Price ($): ', Webscraping.sale_prices(self))
 
 
     def do_image(self, webScraping):
@@ -69,7 +69,7 @@ class HelpCMD(cmd.Cmd, Webscraping):
         List of all scraped product's relevant image, as url list
         :return: Product's Image
         """
-        print('Product Photo: ', Webscraping.photoLink(self))
+        print('Product Photo: ', Webscraping.photo_link(self))
 
 
     def do_pricecomparison(self, webScraping):
@@ -143,22 +143,22 @@ class HelpCMD(cmd.Cmd, Webscraping):
         name_of_file = input("What is the name of the file: ")
         type = input("What data type do you want to save?: ")
         if type == 'Product Name':
-            save = results.productName()
+            save = results.product_name()
         elif type == 'ISBN':
             save = results.isbn()
         elif type == "Publish Date":
-            save = results.publishingDate()
+            save = results.publishing_date()
         elif type == 'Normal Price':
             save = results.RRP()
         elif type == 'Sale Price':
-            save = results.salePrices()
+            save = results.sale_prices()
         elif type == 'Savings':
-            save = results.savingTotal()
+            save = results.saving_total()
         elif type == 'Photos':
-            save = results.photoLink()
+            save = results.photo_link()
         elif type == "Save all":
-            save = results.productName(), results.isbn(), results.RRP(), results.salePrices(),
-            results.savingTotal(), results.photoLink()
+            save = results.product_name(), results.isbn(), results.RRP(), results.sale_prices(),
+            results.saving_total(), results.photo_link()
         complete_name = os.path.join(save_path, name_of_file + ".txt")
         file1 = open(complete_name, "wb")
         pickle.dump(save, file1)

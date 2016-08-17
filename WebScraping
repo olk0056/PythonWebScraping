@@ -1,74 +1,90 @@
 from bs4 import BeautifulSoup
 import requests
 
-url = "http://" + 'www.fishpond.co.nz/Books/Fiction_Literature'
-r = requests.get(url)
-data = r.text
-soup = BeautifulSoup(r.content, "lxml")
+class Urlsetter(object):
+    url = "http://www.fishpond.co.nz/Books/Fiction_Literature"
+    r = requests.get(url)
+    data = r.text
+    soup = BeautifulSoup(r.content, "lxml")
 
 
-productNameResults = []
-isbnResults = []
-publishingDateResults = []
-normalPriceResults = []
-salePriceResults = []
-savingsResults = []
-photoLinkResults = []
-
-class webScraping(object):
+#GET THIS WORKING, HOW TO PASS
+class Webscraping(Urlsetter):
 
     def productName(self):
-        global productNameResults
-        for productName in soup.find_all("a", {"class": "blue_link fn url"}):
-            productNameResults.append(productName.text)
-        print("Product name: ", productNameResults)
-        return productNameResults
+        product_name_results = []
+        for productName in Urlsetter.soup.find_all("a", {"class": "blue_link fn url"}):
+            product_name_results.append(productName.text)
+        try:
+            product_name_results[0]
+        except IndexError:
+            print("No products found found")
+        return product_name_results
 
 
     def isbn(self):
-        global isbnResults
-        for isbn in soup.find_all("input", {"name": "barcode"}):
-            isbnResults.append(isbn['value'])
-        print("ISBN:  ", isbnResults)
-        return isbnResults
+        isbn_results = []
+        for isbn in Urlsetter.soup.find_all("input", {"name": "barcode"}):
+            isbn_results.append(isbn['value'])
+        try:
+            isbn_results[0]
+        except IndexError:
+            print("No ISBN found")
+        return isbn_results
 
 
     def publishingDate(self):
-        global publishingDateResults
-        for publishingDate in soup.find_all("div",
+        publishing_date_results = []
+        for publishingDate in Urlsetter.soup.find_all("div",
                                          {"class": "productSearch-metainfo"}):
-         publishingDateResults.append(publishingDate.text.split(',', 1)[-1])
-        print('Publishing Date: ', publishingDateResults)
-        return publishingDateResults
+         publishing_date_results.append(publishingDate.text.split(',', 1)[-1])
+        try:
+            publishing_date_results[0]
+        except IndexError:
+            print("No publishing dates found")
+        return publishing_date_results
 
 
-    def normalPrice(self):
-        global normalPriceResults
-        for normalPrice in soup.find_all('s'):
-            normalPriceResults.append(normalPrice.text[1:])
-        print('Normal Price: ', normalPriceResults)
-        return normalPriceResults
+    def RRP(self):
+        rrp_results = []
+        for normalPrice in Urlsetter.soup.find_all('s'):
+            rrp_results.append(normalPrice.text[1:])
+        try:
+            rrp_results[0]
+        except IndexError:
+            print("No RRP found")
+        return rrp_results
 
 
     def salePrices(self):
-        global salePriceResults
-        for salePrice in soup.find_all("span", {"class": "productSpecialPrice"}):
-            salePriceResults.append(salePrice.text[1:])
-        print('Sale Price: ', salePriceResults)
-        return salePriceResults
+        sale_price_results = []
+        for salePrice in Urlsetter.soup.find_all("span", {"class": "productSpecialPrice"}):
+            sale_price_results.append(salePrice.text[1:])
+        try:
+            sale_price_results[0]
+        except IndexError:
+            print("No sale prices found")
+        return sale_price_results
 
 
     def savingTotal(self):
-        global savingsResults
-        for savings in soup.find_all("span", {"class": "you_save"}):
-            savingsResults.append(savings.text[-4:-2])
-        print('Savings Price: ', savingsResults)
-        return savingsResults
+        savings_results = []
+        for savings in Urlsetter.soup.find_all("span", {"class": "you_save"}):
+            savings_results.append(savings.text.partition('(')[-1].rpartition('%')[0])
+        try:
+            savings_results[0]
+        except IndexError:
+            print("No savings found")
+        return savings_results
 
 
     def photoLink(self):
-        global photoLinkResults
-        for photoLink in soup.find_all("img", {"class": "photo"}):
-            photoLinkResults.append(photoLink['src'])
-        print('Product Photo: ', photoLinkResults)
-        return photoLinkResults
+        photo_link_results = []
+        for photoLink in Urlsetter.soup.find_all("img", {"class": "photo"}):
+            photo_link_results.append(photoLink['src'])
+        try:
+            photo_link_results[0]
+        except IndexError:
+            print("No photo links found")
+        return photo_link_results
+

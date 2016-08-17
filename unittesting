@@ -1,15 +1,15 @@
-import unittest, warnings
+import unittest
 from scraping import Urlsetter, Webscraping
-from Data import Data
-from cmd_File import HelpCMD
-from bs4 import BeautifulSoup
-import requests
-#import isbn_validator
+import Data_Methods
 import re
+from cmd_File import HelpCMD
 from matplotlib import pyplot as plt
 from matplotlib.testing.decorators import cleanup
+import os
 
 class Scraping_Test(unittest.TestCase):
+
+
         def product_test(self):
             """Fishpond has 20 items listed per page, so the result of product_name method should always
                 equal a length of 20  """
@@ -24,10 +24,12 @@ class Scraping_Test(unittest.TestCase):
             test = re.findall(r"(?i)\b[a-z]+\b", date)
             self.assertTrue(str(test), 'July')
 
+
         def price_test(self):
             """testing output of both RRP"""
             price = Webscraping.RRP(self)[1].isdigit()
             self.assertFalse(price, int)
+
 
         def price_test2(self):
             """testing output of RRP with $ removed"""
@@ -35,31 +37,48 @@ class Scraping_Test(unittest.TestCase):
             self.assertTrue(price, int)
 
 
-'''class Isbn_Test(unittest.TestCase):
-    def no_isbn(self):
-        """Entering a URL for fishpond that is not in the book section should raise a warning
-            when trying to scrape ISBN. This uses a speciality isbn validator to check validity"""
+        def product_failure(self):
+            """Testing that index error is successfully thrown if list is empty
+                AKA cannot scrape any results from the webpage"""
+            savings_results = [0]
+            for savings in Urlsetter.soup.find_all("span", {"class": "you_save"}):
+                try:
+                    savings_results.append(savings.text.partition('(')[-1].rpartition('%')[0])
+                except IndexError:
+                    print("No savings found")
 
-        url = "http://www.fishpond.co.nz/Toys"
-        r = requests.get(url)
-        soup = BeautifulSoup(r.content, "lxml")
-        isbn = []
-        for isbn in soup.find_all("input", {"name": "barcode"}):
-            isbn.append(isbn['value'])
+
+        def product_failure_test(self):
+            """Testing that index error is successfully thrown if list is empty
+                           AKA cannot scrape any results from the webpage"""
+            self.assertRaises(IndexError, Scraping_Test.product_failure(self))
+
+
+
+class CMD_Test(unittest.TestCase):
+    def saving(self):
+        """Test errror is correctly thrown is directory is not valid"""
+        save_path = "/this/is/bad"
         try:
-            isbn_validator.is_valid_isbn(isbn)
-        except IndexError:
-            print("No ISBN valid found")
-        return isbn
+            file1 = open(save_path, "wb")
+            file1.close()
+        except FileNotFoundError:
+            print("Please enter a valid save directory")
 
-    def test_isbn(self):
-       self.assertWarns(Isbn_Test.no_isbn)'''
+    def saving_test(self):
+        """Test errror is correctly thrown is directory is not valid"""
+        self.assertRaises(FileNotFoundError,  CMD_Test.saving(self))
+
 
 @cleanup
 class Data_Test(unittest.TestCase):
+    """Testing that all graphs successfully print"""
     def test_create_figure(self):
         fig = plt.figure()
-        self.assertEqual(Data.price_comparison() == fig)
+        self.assertEqual(Data_Methods.price_comparison() == fig)
+        self.assertEqual(Data_Methods.total_savings_data() == fig)
+        self.assertEqual(Data_Methods.publishing_data() == fig)
+
 
 if __name__ == '__main__':
     unittest.main()

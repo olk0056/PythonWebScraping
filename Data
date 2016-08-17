@@ -1,96 +1,119 @@
-from scraping import webScraping
+from scraping import Webscraping
 import re
 from matplotlib import pyplot as plt
 
-class Data(webScraping):
+class Data(Webscraping):
 
-    def priceComparison(webScraping):
-        intlist = [float(x) for x in webScraping.normalPrice()]
+    def price_comparison(webScraping):
+        x =[]
+        count = 0
+        x1 = []
+        count1 = 0
+        intlist = [float(x) for x in webScraping.RRP()]
         salePriceInt = [float(x) for x in webScraping.salePrices()]
+        while count < len(webScraping.RRP()):
+            count += 1
+            x.append(count)
+
+        while count1 < len(webScraping.salePrices()):
+            count1 += 1
+            x1.append(count1)
+        plt.figure(num=None, figsize=(10, 10), dpi=80, facecolor='w', edgecolor='k')
         y = [i for i in intlist]
-        x = [1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 31, 33,35]
-        x2 = [2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34,36,37,38]
-        y2 = [i for i in salePriceInt]
-        plt.bar(x, y, label='RRP')
-        plt.bar(x2, y2, label='Sale Price', color='r')
+        y1 = [i for i in salePriceInt]
+        plt.xlim(0, 22)
+        plt.plot(x, y, label='RRP')
+        plt.plot(x1, y1, label='Sale Price', color='r')
+        plt.scatter(x, y)
+        plt.scatter(x1, y1,  color='r')
         plt.title('Price Comparison Chart')
         plt.ylabel('Price ($)')
+        plt.xlabel('Number of products')
+        for i, j in zip(y1, x1):
+            plt.annotate(str(i), xy=(j, i), textcoords = 'data',horizontalalignment='left',
+        verticalalignment='bottom')
+        for i, j in zip(y, x):
+            plt.annotate(str(i), xy=(j, i), textcoords = 'data',horizontalalignment='left',
+        verticalalignment='bottom')
         plt.legend()
         plt.show()
 
-    def totalSavingsData(webScraping):
+    def total_savings_data(webScraping):
+        count = 0
+        x = []
         intlist = [int(x) for x in webScraping.savingTotal()]
-        x3 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,18,19]
-        y3 = [i for i in intlist]
-        plt.bar(x3, y3)
+        while count < len(webScraping.savingTotal()):
+                count += 1
+                x.append(count)
+        plt.figure(num=None, figsize=(8, 8), dpi=80, facecolor='w', edgecolor='k')
+        y = [i for i in intlist]
+        plt.xlim(0, 22)
+        plt.ylim(0, 100)
+        plt.bar(x, y)
         plt.title('Total Savings')
         plt.ylabel('Savings (%)')
+        for i, j in zip(y, x):
+            plt.annotate(str(i), xy=(j, i),textcoords = 'data',horizontalalignment='left',
+        verticalalignment='bottom')
         plt.show()
 
 
-    def publishingData(webScraping):
-            result = re.findall(r"(?i)\b[a-z]+\b", str(webScraping.publishingDate()))
-            global January
-            global February
-            global March
-            global April
-            global May
-            global June
-            global July
-            global August
-            global September
-            global October
-            global November
-            global December
+    def publishing_data(webScraping):
+        January = []
+        February = []
+        March = []
+        April = []
+        May = []
+        June = []
+        July = []
+        August = []
+        September = []
+        October = []
+        November = []
+        December = []
 
-            def calculateMonth(result):
-                for month in result:
-                    if month == "January":
+        result = re.findall(r"(?i)\b[a-z]+\b", str(webScraping.publishingDate()))
+        for strings in result:
+            if strings == "January":
                         January.append(1)
-                    elif month == "February":
+            elif strings == "February":
                         February.append(1)
-                    elif month == "March":
+            elif strings == "March":
                         March.append(1)
-                    elif month == "April":
+            elif strings == "April":
                         April.append(1)
-                    elif month == "May":
+            elif strings == "May":
                         May.append(1)
-                    elif month == "June":
+            elif strings == "June":
                         June.append(1)
-                    elif month == "July":
+            elif strings == "July":
                         July.append(1)
-                    elif month == "August":
+            elif strings == "August":
                         August.append(1)
-                    elif month == "September":
+            elif strings == "September":
                         September.append(1)
-                    elif month == "October":
+            elif strings == "October":
                         October.append(1)
-                    elif month == "November":
+            elif strings == "November":
                         November.append(1)
-                    elif month == "December":
+            elif strings == "December":
                         December.append(1)
 
-                # Data to plot
-                labels = 'January', 'February', 'March', 'April', 'May', 'June',
-                'July', 'August', 'September', 'October', 'November', 'December'
-                sizes = [len(January), len(February), len(March), len(April),
-                         len(May), len(June), len(July),
-                         len(August), len(September), len(October),
-                         len(November), len(December)]
-                colors = ['gold', 'yellowgreen', 'lightcoral', 'lightskyblue',
-                          'red', 'black', 'blue', 'yellow', 'green',
-                          'purple',
-                          'orange', 'darkblue']
-                explode = (0.1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)  # explode 1st slice
+            # Data to plot
+        labels = ['January', 'February', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December']
+        sizes = [len(January), len(February), len(March), len(April),
+                     len(May), len(June), len(July),
+                     len(August), len(September), len(October),
+                     len(November), len(December)]
+        colors = ['gold', 'yellowgreen', 'lightcoral', 'lightskyblue',
+                      'red', 'black', 'blue', 'yellow', 'green',
+                      'purple', 'orange', 'darkblue']
+        explode = (0.1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)  # explode 1st slice
 
-                # Plot
-                plt.pie(sizes, explode=explode, labels=labels, colors=colors,
-                        autopct='%1.0f%%', pctdistance=1.1, labeldistance=1.2)
+            # Plot
+        plt.pie(sizes, explode=explode, labels=labels, colors=colors,
+                    autopct='%1.0f%%', pctdistance=1.1, labeldistance=1.2)
 
-                plt.axis('equal')
-                plt.show()
-
-printing = Data()
-printing.priceComparison()
-printing.savingTotal()
-printing.publishingDate()
+        plt.axis('equal')
+        plt.show()

@@ -2,7 +2,7 @@ from scraping import Webscraping
 import re
 from matplotlib import pyplot as plt
 
-class Data(Webscraping):
+class Data_Methods(Webscraping):
 
     def price_comparison(webScraping):
         x =[]

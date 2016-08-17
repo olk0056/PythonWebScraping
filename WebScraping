@@ -7,8 +7,6 @@ class Urlsetter(object):
     data = r.text
     soup = BeautifulSoup(r.content, "lxml")
 
-
-#GET THIS WORKING, HOW TO PASS
 class Webscraping(Urlsetter):
 
     def productName(self):
@@ -47,8 +45,8 @@ class Webscraping(Urlsetter):
 
     def RRP(self):
         rrp_results = []
-        for normalPrice in Urlsetter.soup.find_all('s'):
-            rrp_results.append(normalPrice.text[1:])
+        for rrp in Urlsetter.soup.find_all('s'):
+            rrp_results.append(rrp.text[1:])
         try:
             rrp_results[0]
         except IndexError:

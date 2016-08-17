@@ -1,0 +1,65 @@
+import unittest, warnings
+from scraping import Urlsetter, Webscraping
+from Data import Data
+from cmd_File import HelpCMD
+from bs4 import BeautifulSoup
+import requests
+#import isbn_validator
+import re
+from matplotlib import pyplot as plt
+from matplotlib.testing.decorators import cleanup
+
+class Scraping_Test(unittest.TestCase):
+        def product_test(self):
+            """Fishpond has 20 items listed per page, so the result of product_name method should always
+                equal a length of 20  """
+            self.assertEqual(len(Webscraping.product_name(self)), 20)
+
+
+        def publishing_test(self):
+            """check that string stripper successfully removes numbers from publishing date,
+                to be used for graphing results"""
+            date = Webscraping.publishing_date(self)[1]
+            date = date.split(',', 1)[-1]
+            test = re.findall(r"(?i)\b[a-z]+\b", date)
+            self.assertTrue(str(test), 'July')
+
+        def price_test(self):
+            """testing output of both RRP"""
+            price = Webscraping.RRP(self)[1].isdigit()
+            self.assertFalse(price, int)
+
+        def price_test2(self):
+            """testing output of RRP with $ removed"""
+            price = Webscraping.RRP(self)[1].split(',', 1)[-1]
+            self.assertTrue(price, int)
+
+
+'''class Isbn_Test(unittest.TestCase):
+    def no_isbn(self):
+        """Entering a URL for fishpond that is not in the book section should raise a warning
+            when trying to scrape ISBN. This uses a speciality isbn validator to check validity"""
+
+        url = "http://www.fishpond.co.nz/Toys"
+        r = requests.get(url)
+        soup = BeautifulSoup(r.content, "lxml")
+        isbn = []
+        for isbn in soup.find_all("input", {"name": "barcode"}):
+            isbn.append(isbn['value'])
+        try:
+            isbn_validator.is_valid_isbn(isbn)
+        except IndexError:
+            print("No ISBN valid found")
+        return isbn
+
+    def test_isbn(self):
+       self.assertWarns(Isbn_Test.no_isbn)'''
+
+@cleanup
+class Data_Test(unittest.TestCase):
+    def test_create_figure(self):
+        fig = plt.figure()
+        self.assertEqual(Data.price_comparison() == fig)
+
+if __name__ == '__main__':
+    unittest.main()

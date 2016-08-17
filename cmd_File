@@ -1,7 +1,8 @@
 import cmd
-from scraping import Webscraping
-import os.path
+from scraping import Webscraping, Urlsetter
 import pickle
+import os
+import urllib.request as req
 
 class HelpCMD(cmd.Cmd, Webscraping):
     """
@@ -19,8 +20,8 @@ class HelpCMD(cmd.Cmd, Webscraping):
         List of all scraped product names, as list
         :return: Product Name
          """
-        from scraping import Webscraping
-        Webscraping.productName(self)
+        print("Product name: ", Webscraping.productName(self))
+
 
 
     def do_isbn(self, webScraping):
@@ -28,8 +29,8 @@ class HelpCMD(cmd.Cmd, Webscraping):
         List of all scraped product ISBN's, as list
         :return: Book ISBN
         """
-        from scraping import Webscraping
-        Webscraping.isbn(self)
+        print("ISBN:  ", Webscraping.isbn(self))
+
 
 
     def do_savings(self, webScraping):
@@ -37,26 +38,22 @@ class HelpCMD(cmd.Cmd, Webscraping):
         List of all scraped savings, as list
         :return: Savings
         """
-        from scraping import Webscraping
-        Webscraping.savingTotal(self)
-
+        print('Savings: ',  Webscraping.savingTotal(self))
 
     def do_publish(self, webScraping):
         """
         List of all scraped product's Publishing Date, as list
         :return: Publishing Date
         """
-        from scraping import Webscraping
-        Webscraping.publishingDate(self)
+        print('Publishing Date: ', Webscraping.publishingDate(self))
 
 
-    def do_normal(self, webScraping):
+    def do_rrp(self, webScraping):
         """
         List of all scraped product RRP, as list
         :return: RRP
         """
-        from scraping import Webscraping
-        Webscraping.normalPrice(self)
+        print('Normal Price ($): ', Webscraping.RRP(self))
 
 
     def do_sale(self, webScraping):
@@ -64,8 +61,7 @@ class HelpCMD(cmd.Cmd, Webscraping):
         List of all scraped product's Sale Price, as list
         :return: Sale Price
         """
-        from scraping import Webscraping
-        Webscraping.salePrices(self)
+        print('Sale Price ($): ', Webscraping.salePrices(self))
 
 
     def do_image(self, webScraping):
@@ -73,9 +69,34 @@ class HelpCMD(cmd.Cmd, Webscraping):
         List of all scraped product's relevant image, as url list
         :return: Product's Image
         """
-        from scraping import Webscraping
-        Webscraping.photoLink(self)
+        print('Product Photo: ', Webscraping.photoLink(self))
 
+
+    def do_pricecomparison(self, webScraping):
+        """
+        Graphical comparison of RRP and Sale Price for all products
+        :return: Graph
+        """
+        from Data import Data
+        Data.price_comparison(self)
+
+
+    def do_totalsavingsdata(self, webScraping):
+        """
+        Graph showing the savings (%) of all the products scraped
+        :return: Graph
+        """
+        from Data import Data
+        Data.total_savings_data(self)
+
+
+    def do_publishingdata(self, webScraping):
+        """
+        Pie chart showing a breakdown publishing dates by month
+        :return: Graph
+        """
+        from Data import Data
+        Data.publishing_data(self)
 
     def do_quit(self):
         """
@@ -85,15 +106,27 @@ class HelpCMD(cmd.Cmd, Webscraping):
         print("Quitting ......")
         return True
 
+    def do_geturl(self, webScraping):
+        """
+        Get URL of Fishpond page to scrap information from
+        :return: text
+        """
+        print(Urlsetter.url)
 
-    def do_setURL(self, webScraping):
+
+
+    def do_seturl(self, webScraping):
         """
         Set URL of Fishpond page to scrap information from
         :return: Input
         """
-        input("Please enter a Fishpond URL")
-        return input
-
+        urlValue = input("Please enter a Fishpond URL: ")
+        request = req.Request(urlValue)
+        try:
+            response = req.urlopen(request)
+        except ValueError:
+            print("Please enter a valid url")
+        Urlsetter.url = urlValue
 
     def help_quit(self):
         print('\n'.join(['Quit from my CMD', ':return: True']))
@@ -116,7 +149,7 @@ class HelpCMD(cmd.Cmd, Webscraping):
         elif type == "Publish Date":
             save = results.publishingDate()
         elif type == 'Normal Price':
-            save = results.normalPrice()
+            save = results.RRP()
         elif type == 'Sale Price':
             save = results.salePrices()
         elif type == 'Savings':
@@ -124,7 +157,7 @@ class HelpCMD(cmd.Cmd, Webscraping):
         elif type == 'Photos':
             save = results.photoLink()
         elif type == "Save all":
-            save = results.productName(), results.isbn(), results.normalPrice(), results.salePrices(),
+            save = results.productName(), results.isbn(), results.RRP(), results.salePrices(),
             results.savingTotal(), results.photoLink()
         complete_name = os.path.join(save_path, name_of_file + ".txt")
         file1 = open(complete_name, "wb")

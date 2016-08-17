@@ -3,6 +3,7 @@ from scraping import Webscraping, Urlsetter
 import pickle
 import os
 import urllib.request as req
+from Data_Methods import Data_Methods
 
 class HelpCMD(cmd.Cmd, Webscraping):
     """
@@ -77,8 +78,7 @@ class HelpCMD(cmd.Cmd, Webscraping):
         Graphical comparison of RRP and Sale Price for all products
         :return: Graph
         """
-        from Data import Data
-        Data.price_comparison(self)
+        Data_Methods.price_comparison(self)
 
 
     def do_totalsavingsdata(self, webScraping):
@@ -86,8 +86,7 @@ class HelpCMD(cmd.Cmd, Webscraping):
         Graph showing the savings (%) of all the products scraped
         :return: Graph
         """
-        from Data import Data
-        Data.total_savings_data(self)
+        Data_Methods.total_savings_data(self)
 
 
     def do_publishingdata(self, webScraping):
@@ -95,8 +94,7 @@ class HelpCMD(cmd.Cmd, Webscraping):
         Pie chart showing a breakdown publishing dates by month
         :return: Graph
         """
-        from Data import Data
-        Data.publishing_data(self)
+        Data_Methods.publishing_data(self)
 
     def do_quit(self):
         """
@@ -128,8 +126,10 @@ class HelpCMD(cmd.Cmd, Webscraping):
             print("Please enter a valid url")
         Urlsetter.url = urlValue
 
+
     def help_quit(self):
         print('\n'.join(['Quit from my CMD', ':return: True']))
+
 
     def do_savefile(self,webScraping):
         """
@@ -140,29 +140,34 @@ class HelpCMD(cmd.Cmd, Webscraping):
         """
         results = Webscraping()
         save_path = input("What is the directory?: ")
-        name_of_file = input("What is the name of the file: ")
-        type = input("What data type do you want to save?: ")
-        if type == 'Product Name':
-            save = results.product_name()
-        elif type == 'ISBN':
-            save = results.isbn()
-        elif type == "Publish Date":
-            save = results.publishing_date()
-        elif type == 'Normal Price':
-            save = results.RRP()
-        elif type == 'Sale Price':
-            save = results.sale_prices()
-        elif type == 'Savings':
-            save = results.saving_total()
-        elif type == 'Photos':
-            save = results.photo_link()
-        elif type == "Save all":
-            save = results.product_name(), results.isbn(), results.RRP(), results.sale_prices(),
-            results.saving_total(), results.photo_link()
-        complete_name = os.path.join(save_path, name_of_file + ".txt")
-        file1 = open(complete_name, "wb")
-        pickle.dump(save, file1)
-        file1.close()
+        try:
+            name_of_file = input("What is the name of the file: ")
+            type = input("What data type do you want to save?: ")
+            if type == 'Product Name':
+                save = results.product_name()
+            elif type == 'ISBN':
+                save = results.isbn()
+            elif type == "Publish Date":
+                save = results.publishing_date()
+            elif type == 'Normal Price':
+                save = results.RRP()
+            elif type == 'Sale Price':
+                save = results.sale_prices()
+            elif type == 'Savings':
+                save = results.saving_total()
+            elif type == 'Photos':
+                save = results.photo_link()
+            elif type == "Save all":
+                save = (results.product_name(), results.isbn(), results.RRP(), results.sale_prices(),
+                        results.saving_total(), results.photo_link())
+            complete_name = os.path.join(save_path, name_of_file + ".txt")
+            file1 = open(complete_name, "wb")
+            pickle.dump(save, file1)
+            file1.close()
+        except FileNotFoundError:
+               print("Please enter a valid save directory")
+
+
 
 
     def do_loadfile(self,webScraping):
@@ -170,11 +175,16 @@ class HelpCMD(cmd.Cmd, Webscraping):
         Loads data from previously saved file
         :return: Data
         """
-        infile = input("Please enter the file location: ")
-        f = open(infile, 'rb')
-        results = pickle.load(f)
-        print(results)
-        f.close()
+        infile = input("Please enter the file path: ")
+        try:
+            f = open(infile, 'rb')
+            results = pickle.load(f)
+            print(results)
+            f.close()
+        except FileNotFoundError:
+            print("Please enter a valid file path")
+
+
 
 if __name__ == '__main__':
     prompt = HelpCMD()

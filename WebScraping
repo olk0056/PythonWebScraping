@@ -1,81 +1,79 @@
 from bs4 import BeautifulSoup
 import requests
 
-class Urlsetter(object):
-    url = "http://www.fishpond.co.nz/Books/Fiction_Literature"
-    r = requests.get(url)
+
+class set_url(object):
+
+    r = requests.get(input("Please enter a Fishpond URL: "))
     soup = BeautifulSoup(r.content, "lxml")
 
-class Webscraping(Urlsetter):
+
+class Webscraping(object):
 
     def product_name(self):
         product_name_results = []
-        for product_name in Urlsetter.soup.find_all("a", {"class": "blue_link fn url"}):
+        for product_name in set_url.soup.find_all("a",
+                {"class": "blue_link fn url"}):
             try:
-                    product_name_results.append(product_name.text)
+                product_name_results.append(product_name.text)
             except IndexError:
                 print("No products found found")
         return product_name_results
 
-
     def isbn(self):
         isbn_results = []
-        for isbn in Urlsetter.soup.find_all("input", {"name": "barcode"}):
+        for isbn in set_url().soup.find_all("input", {"name": "barcode"}):
             try:
-                    isbn_results.append(isbn['value'])
+                isbn_results.append(isbn['value'])
             except IndexError:
                 print("No ISBN valid found")
         return isbn_results
 
-
-
     def publishing_date(self):
         publishing_date_results = []
-        for dates in Urlsetter.soup.find_all("div",
-                                             {"class": "productSearch-metainfo"}):
+        for dates in set_url().soup.find_all("div",
+                {"class": "productSearch-metainfo"}):
             try:
-                    publishing_date_results.append(dates.text.split(',', 1)[-1])
+                publishing_date_results.append(dates.text.split(',', 1)[-1])
             except IndexError:
                 print("No publishing dates found")
         return publishing_date_results
 
-
     def RRP(self):
         rrp_results = []
-        for rrp in Urlsetter.soup.find_all('s'):
+        for rrp in set_url().soup.find_all('s'):
             try:
-                    rrp_results.append(rrp.text)
+                rrp_results.append(rrp.text[1:])
             except IndexError:
                 print("No RRP found")
         return rrp_results
 
-
     def sale_prices(self):
         sale_price_results = []
-        for salePrice in Urlsetter.soup.find_all("span", {"class": "productSpecialPrice"}):
+        for salePrice in set_url().soup.find_all("span",
+                {"class": "productSpecialPrice"}):
             try:
-                    sale_price_results.append(salePrice.text)
+                sale_price_results.append(salePrice.text[1:])
             except IndexError:
                 print("No sale prices found")
         return sale_price_results
 
-
     def saving_total(self):
         savings_results = []
-        for savings in Urlsetter.soup.find_all("span", {"class": "you_save"}):
+        for savings in set_url().soup.find_all("span",
+                {"class": "you_save"}):
             try:
-                savings_results.append(savings.text.partition('(')[-1].rpartition('%')[0])
+                savings_results.append(savings.text.partition
+                        ('(')[-1].rpartition('%')[0])
             except IndexError:
                 print("No savings found")
         return savings_results
 
-
     def photo_link(self):
         photo_link_results = []
-        for photoLink in Urlsetter.soup.find_all("img", {"class": "photo"}):
+        for photoLink in set_url().soup.find_all("img", {"class": "photo"}):
             try:
                 photo_link_results.append(photoLink['src'])
             except IndexError:
                 print("No photo links found")
         return photo_link_results
-

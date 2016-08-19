@@ -1,52 +1,52 @@
 import unittest
-from scraping import Urlsetter, Webscraping
+from scraping import *
 import Data_Methods
 import re
-from cmd_File import HelpCMD
 from matplotlib import pyplot as plt
 from matplotlib.testing.decorators import cleanup
-import os
+
+
+@unittest.skip("showing class skipping")
+class MySkippedTestCase(unittest.TestCase):
+    def test_not_run(self):
+        pass
+
 
 class Scraping_Test(unittest.TestCase):
 
-
         def product_test(self):
-            """Fishpond has 20 items listed per page, so the result of product_name method should always
-                equal a length of 20  """
+            """Fishpond has 20 items listed per page, so the result of
+            product_name method should always equal a length of 20  """
             self.assertEqual(len(Webscraping.product_name(self)), 20)
 
-
         def publishing_test(self):
-            """check that string stripper successfully removes numbers from publishing date,
-                to be used for graphing results"""
+            """check that string stripper successfully removes numbers
+            from publishing date, to be used for graphing results"""
             date = Webscraping.publishing_date(self)[1]
             date = date.split(',', 1)[-1]
             test = re.findall(r"(?i)\b[a-z]+\b", date)
             self.assertTrue(str(test), 'July')
-
 
         def price_test(self):
             """testing output of both RRP"""
             price = Webscraping.RRP(self)[1].isdigit()
             self.assertFalse(price, int)
 
-
         def price_test2(self):
             """testing output of RRP with $ removed"""
             price = Webscraping.RRP(self)[1].split(',', 1)[-1]
             self.assertTrue(price, int)
 
-
         def product_failure(self):
             """Testing that index error is successfully thrown if list is empty
                 AKA cannot scrape any results from the webpage"""
             savings_results = [0]
-            for savings in Urlsetter.soup.find_all("span", {"class": "you_save"}):
+            for savings in savings_results:
                 try:
-                    savings_results.append(savings.text.partition('(')[-1].rpartition('%')[0])
+                    savings_results.append(savings.text.partition
+                                           ('(')[-1].rpartition('%')[0])
                 except IndexError:
                     print("No savings found")
-
 
         def product_failure_test(self):
             """Testing that index error is successfully thrown if list is empty
@@ -54,8 +54,8 @@ class Scraping_Test(unittest.TestCase):
             self.assertRaises(IndexError, Scraping_Test.product_failure(self))
 
 
-
 class CMD_Test(unittest.TestCase):
+
     def saving(self):
         """Test errror is correctly thrown is directory is not valid"""
         save_path = "/this/is/bad"
@@ -78,7 +78,6 @@ class Data_Test(unittest.TestCase):
         self.assertEqual(Data_Methods.price_comparison() == fig)
         self.assertEqual(Data_Methods.total_savings_data() == fig)
         self.assertEqual(Data_Methods.publishing_data() == fig)
-
 
 if __name__ == '__main__':
     unittest.main()

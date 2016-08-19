@@ -1,0 +1,29 @@
+import doctest
+
+
+def list_append():
+    """Appending a value to the end of a list
+
+    >>> list1 = [1,2]
+    >>> list1.append(3)
+    >>> print(list1)
+    [1, 2, 3]
+    """
+
+
+def append_text_to_list():
+
+    """Appending an edited text to a list. In this case, split the
+    string after the , (comma)
+    and THEN takes the last value from the split as array starts at 0,
+    so the last value can be retrieved using -1
+    >>> dates = "Hello, world!"
+    >>> list1 = [1,2]
+    >>> list1.append(dates.split(',', 1)[-1])
+    >>> print(list1)
+    [1, 2, ' world!']
+    """
+
+if __name__ == '__main__':
+    import doctest
+    doctest.testmod()

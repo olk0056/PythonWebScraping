@@ -1,5 +1,5 @@
 import unittest
-from scraping import *
+from scraping import Webscraping
 import Data_Methods
 import re
 from matplotlib import pyplot as plt
@@ -14,12 +14,12 @@ class MySkippedTestCase(unittest.TestCase):
 
 class Scraping_Test(unittest.TestCase):
 
-        def product_test(self):
+        def test_product(self):
             """Fishpond has 20 items listed per page, so the result of
             product_name method should always equal a length of 20  """
             self.assertEqual(len(Webscraping.product_name(self)), 20)
 
-        def publishing_test(self):
+        def test_publishing(self):
             """check that string stripper successfully removes numbers
             from publishing date, to be used for graphing results"""
             date = Webscraping.publishing_date(self)[1]
@@ -27,12 +27,12 @@ class Scraping_Test(unittest.TestCase):
             test = re.findall(r"(?i)\b[a-z]+\b", date)
             self.assertTrue(str(test), 'July')
 
-        def price_test(self):
+        def test_RRP(self):
             """testing output of both RRP"""
             price = Webscraping.RRP(self)[1].isdigit()
             self.assertFalse(price, int)
 
-        def price_test2(self):
+        def test_RRP2(self):
             """testing output of RRP with $ removed"""
             price = Webscraping.RRP(self)[1].split(',', 1)[-1]
             self.assertTrue(price, int)
@@ -48,7 +48,7 @@ class Scraping_Test(unittest.TestCase):
                 except IndexError:
                     print("No savings found")
 
-        def product_failure_test(self):
+        def test_product_failure(self):
             """Testing that index error is successfully thrown if list is empty
                            AKA cannot scrape any results from the webpage"""
             self.assertRaises(IndexError, Scraping_Test.product_failure(self))
@@ -65,7 +65,7 @@ class CMD_Test(unittest.TestCase):
         except FileNotFoundError:
             print("Please enter a valid save directory")
 
-    def saving_test(self):
+    def test_saving(self):
         """Test errror is correctly thrown is directory is not valid"""
         self.assertRaises(FileNotFoundError,  CMD_Test.saving(self))
 

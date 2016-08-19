@@ -8,3 +8,5 @@ PR301 Assignment
 16/8- Added save/load file functionality to CMD
 
 17/8- Added some try/except functions, improved data(graph) code and prettied graphs up. Still don't have passing url functionality. Some unittests have been implemented.
+
+19/8- Fixed url passing functionality, though still needs improvement. Added some more doc/unittests and cleaned up with Pep8.

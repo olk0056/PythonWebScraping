@@ -20,7 +20,7 @@ class Webscraping(object):
     def product_name(self):
         product_name_results = []
         for product_name in soup.find_all("a",
-                                              {"class": "blue_link fn url"}):
+            {"class": "blue_link fn url"}):
             try:
                 product_name_results.append(product_name.text)
             except IndexError:
@@ -29,7 +29,7 @@ class Webscraping(object):
 
     def isbn(self):
         isbn_results = []
-        for isbn in URL().soup.find_all("input", {"name": "barcode"}):
+        for isbn in soup.find_all("input", {"name": "barcode"}):
             try:
                 isbn_results.append(isbn['value'])
             except IndexError:
@@ -38,7 +38,7 @@ class Webscraping(object):
 
     def publishing_date(self):
         publishing_date_results = []
-        for dates in URL().soup.find_all("div",
+        for dates in soup.find_all("div",
                                          {"class": "productSearch-metainfo"}):
             try:
                 publishing_date_results.append(dates.text.split(',', 1)[-1])
@@ -48,7 +48,7 @@ class Webscraping(object):
 
     def RRP(self):
         rrp_results = []
-        for rrp in URL().soup.find_all('s'):
+        for rrp in soup.find_all('s'):
             try:
                 rrp_results.append(rrp.text[1:])
             except IndexError:
@@ -57,7 +57,7 @@ class Webscraping(object):
 
     def sale_prices(self):
         sale_price_results = []
-        for salePrice in URL().soup.find_all("span",
+        for salePrice in soup.find_all("span",
                                              {"class": "productSpecialPrice"}):
             try:
                 sale_price_results.append(salePrice.text[1:])
@@ -67,7 +67,7 @@ class Webscraping(object):
 
     def saving_total(self):
         savings_results = []
-        for savings in URL().soup.find_all("span",
+        for savings in soup.find_all("span",
                                            {"class": "you_save"}):
             try:
                 savings_results.append(savings.text.partition
@@ -78,9 +78,10 @@ class Webscraping(object):
 
     def photo_link(self):
         photo_link_results = []
-        for photoLink in URL().soup.find_all("img", {"class": "photo"}):
+        for photoLink in soup.find_all("img", {"class": "photo"}):
             try:
                 photo_link_results.append(photoLink['src'])
             except IndexError:
                 print("No photo links found")
         return photo_link_results
+        

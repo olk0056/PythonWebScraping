@@ -10,3 +10,5 @@ PR301 Assignment
 17/8- Added some try/except functions, improved data(graph) code and prettied graphs up. Still don't have passing url functionality. Some unittests have been implemented.
 
 19/8- Fixed url passing functionality, though still needs improvement. Added some more doc/unittests and cleaned up with Pep8.
+
+23/8- Reworked url passing for better functionality and validity checking.

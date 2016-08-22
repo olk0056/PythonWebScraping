@@ -2,7 +2,6 @@ import cmd
 from scraping import *
 import pickle
 import os
-import urllib.request as req
 from Data_Methods import Data_Methods
 
 
@@ -11,19 +10,18 @@ class HelpCMD(cmd.Cmd, Webscraping):
     """
     Web Scraping CMD
     """
-    global new_url
 
     def __init__(self):
         cmd.Cmd.__init__(self)
         self.prompt = ">>>"
         self.cmdloop()
 
-    def do_seturl(self, webscraping):
+    def do_seturl(self, url):
         """
         Set URL of Fishpond page to scrap information from
         :return: Input
-        """
-        set_url()
+         """
+        URL.go(self)
 
     def do_product(self, webscraping):
         """

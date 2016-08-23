@@ -1,85 +1,158 @@
-from bs4 import BeautifulSoup
-import requests
-import sys
+import cmd
+from scraping import *
+import pickle
+import os
+from Data_Methods import Data_Methods
 
 
-class URL(object):
+class HelpCMD(cmd.Cmd, Webscraping):
 
-    def go(self):
-        global soup
-        chars = set('fishpond')
-        r = requests.get(input("Please enter a Fishpond URL: "))
-        if ((c in chars) for c in r) and r.status_code == 200:
-            soup = BeautifulSoup(r.content, "lxml")
-        else:
-            print('Please enter a valid Fishpond URL')
-            sys.exit(0)
+    """
+    Web Scraping CMD
+    """
 
+    def __init__(self):
+        cmd.Cmd.__init__(self)
+        self.prompt = ">>>"
+        self.cmdloop()
 
-class Webscraping(object):
+    def do_seturl(self, url):
+        """
+        Set URL of Fishpond page to scrap information from
+        :return: Input
+         """
+        URL.go(self)
 
-    def product_name(self):
-        product_name_results = []
-        for product_name in soup.find_all("a", {"class": "blue_link fn url"}):
-            try:
-                product_name_results.append(product_name.text)
-            except IndexError:
-                print("No products found found")
-        return product_name_results
+    def do_printall(self, webscraping):
+        """
+        List of all scraped data, as list
+        """
+        print("Product name: ", Webscraping.product_name(self))
+        print("ISBN:  ", Webscraping.isbn(self))
+        print('Publishing Date: ', Webscraping.publishing_date(self))
+        print('RRP ($): ', Webscraping.RRP(self))
+        print('Sale Price ($): ', Webscraping.sale_prices(self))
+        print('Savings : ', Webscraping.saving_total(self))
+        print('Product Photo: ', Webscraping.photo_link(self))
 
-    def isbn(self):
-        isbn_results = []
-        for isbn in soup.find_all("input", {"name": "barcode"}):
-            try:
-                isbn_results.append(isbn['value'])
-            except IndexError:
-                print("No ISBN valid found")
-        return isbn_results
+    def do_product(self, webscraping):
+        """
+        List of all scraped product names, as list
+         """
+        print("Product name: ", Webscraping.product_name(self))
 
-    def publishing_date(self):
-        publishing_date_results = []
-        for dates in soup.find_all("div", {"class": "productSearch-metainfo"}):
-            try:
-                publishing_date_results.append(dates.text.split(',', 1)[-1])
-            except IndexError:
-                print("No publishing dates found")
-        return publishing_date_results
+    def do_isbn(self, webscraping):
+        """
+        List of all scraped product ISBN's, as list
+        """
+        print("ISBN:  ", Webscraping.isbn(self))
 
-    def RRP(self):
-        rrp_results = []
-        for rrp in soup.find_all('s'):
-            try:
-                rrp_results.append(rrp.text[1:])
-            except IndexError:
-                print("No RRP found")
-        return rrp_results
+    def do_savings(self, webscraping):
+        """
+        List of all scraped savings, as list
+        """
+        print('Savings : ', Webscraping.saving_total(self))
 
-    def sale_prices(self):
-        sale_price_results = []
-        for salePrice in soup.find_all("span",
-                                       {"class": "productSpecialPrice"}):
-            try:
-                sale_price_results.append(salePrice.text[1:])
-            except IndexError:
-                print("No sale prices found")
-        return sale_price_results
+    def do_publish(self, webscraping):
+        """
+        List of all scraped product's Publishing Date, as list
+        """
+        print('Publishing Date: ', Webscraping.publishing_date(self))
 
-    def saving_total(self):
-        savings_results = []
-        for savings in soup.find_all("span",
-                                     {"class": "you_save"}):
-            try:
-                savings_results.append(savings.text.partition
-                                       ('(')[-1].rpartition('%')[0])
-            except IndexError:
-                print("No savings found")
-        return savings_results
+    def do_rrp(self, webscraping):
+        """
+        List of all scraped product RRP, as list
+        """
+        print('Normal Price ($): ', Webscraping.RRP(self))
 
-    def photo_link(self):
-        photo_link_results = []
-        for photoLink in soup.find_all("img", {"class": "photo"}):
-            try:
-                photo_link_results.append(photoLink['src'])
-            except IndexError:
-                print("No photo links found")
-        return photo_link_results
+    def do_sale(self, webscraping):
+        """
+        List of all scraped product's Sale Price, as list
+        """
+        print('Sale Price ($): ', Webscraping.sale_prices(self))
+
+    def do_image(self, webscraping):
+        """
+        List of all scraped product's relevant image, as url list
+        """
+        print('Product Photo: ', Webscraping.photo_link(self))
+
+    def do_pricecomparison(self, webscraping):
+        """
+        Graphical comparison of RRP and Sale Price for all products
+        """
+        Data_Methods.price_comparison(self)
+
+    def do_totalsavingsdata(self, webscraping):
+        """
+        Graph showing the savings (%) of all the products scraped
+        """
+        Data_Methods.total_savings_data(self)
+
+    def do_publishingdata(self, webscraping):
+        """
+        Pie chart showing a breakdown publishing dates by month
+        """
+        Data_Methods.publishing_data(self)
+
+    def do_quit(self, webscraping):
+        """
+        Quit from my CMD
+        """
+        print("Quitting ......")
+        return True
+
+    def help_quit(self, webscraping):
+        print('\n'.join(['Quit from my CMD', ':return: True']))
+
+    def do_savefile(self, webscraping):
+        """
+        Saves information scraped to txt file
+        :data types: Product Name, ISBN, Publish Date, Normal Price,
+                    Sale Price, Savings, Photos, All
+        """
+        results = Webscraping()
+        save_path = input("What is the directory?: ")
+        try:
+            name_of_file = input("What is the name of the file: ")
+            type = input("What data type do you want to save?: ")
+            if type == 'Product Name':
+                save = results.product_name()
+            elif type == 'ISBN':
+                save = results.isbn()
+            elif type == "Publish Date":
+                save = results.publishing_date()
+            elif type == 'Normal Price':
+                save = results.RRP()
+            elif type == 'Sale Price':
+                save = results.sale_prices()
+            elif type == 'Savings':
+                save = results.saving_total()
+            elif type == 'Photos':
+                save = results.photo_link()
+            elif type == "Save all":
+                save = (results.product_name(), results.isbn(), results.RRP(),
+                        results.sale_prices(),
+                        results.saving_total(), results.photo_link())
+            complete_name = os.path.join(save_path, name_of_file + ".txt")
+            file1 = open(complete_name, "wb")
+            pickle.dump(save, file1)
+            file1.close()
+        except FileNotFoundError:
+                print("Please enter a valid save directory")
+
+    def do_loadfile(self, webscraping):
+        """
+        Loads data from previously saved file
+        """
+        infile = input("Please enter the file path: ")
+        try:
+            f = open(infile, 'rb')
+            results = pickle.load(f)
+            print(results)
+            f.close()
+        except FileNotFoundError:
+            print("Please enter a valid file path")
+
+if __name__ == '__main__':
+    prompt = HelpCMD()

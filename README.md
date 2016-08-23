@@ -12,3 +12,5 @@ PR301 Assignment
 19/8- Fixed url passing functionality, though still needs improvement. Added some more doc/unittests and cleaned up with Pep8.
 
 23/8- Reworked url passing for better functionality and validity checking. Trying to get a table working for matplotlib but currently cannot wrap text within cells. 
+
+24/8- Final rework, error exception for cmd (NameError)

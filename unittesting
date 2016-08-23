@@ -1,8 +1,5 @@
 import unittest
-from Data_Methods import *
 import re
-from matplotlib import pyplot as plt
-from matplotlib.testing.decorators import cleanup
 from bs4 import BeautifulSoup
 import requests
 

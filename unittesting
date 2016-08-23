@@ -4,6 +4,7 @@ import Data_Methods
 import re
 from matplotlib import pyplot as plt
 from matplotlib.testing.decorators import cleanup
+import requests
 
 
 @unittest.skip("showing class skipping")
@@ -13,11 +14,6 @@ class MySkippedTestCase(unittest.TestCase):
 
 
 class Scraping_Test(unittest.TestCase):
-
-        def test_product(self):
-            """Fishpond has 20 items listed per page, so the result of
-            product_name method should always equal a length of 20  """
-            self.assertEqual(len(Webscraping.product_name(self)), 20)
 
         def test_publishing(self):
             """check that string stripper successfully removes numbers
@@ -43,8 +39,7 @@ class Scraping_Test(unittest.TestCase):
             savings_results = [0]
             for savings in savings_results:
                 try:
-                    savings_results.append(savings.text.partition
-                                           ('(')[-1].rpartition('%')[0])
+                    print("Yay!")
                 except IndexError:
                     print("No savings found")
 
@@ -52,6 +47,20 @@ class Scraping_Test(unittest.TestCase):
             """Testing that index error is successfully thrown if list is empty
                            AKA cannot scrape any results from the webpage"""
             self.assertRaises(IndexError, Scraping_Test.product_failure(self))
+
+        def url_failure(self):
+            """Testing that index error is successfully thrown if list is empty
+                AKA cannot scrape any results from the webpage"""
+            r = requests.get('http://www.google.com')
+            if re.findall("fishpond", str(r)) and r.status_code == 200:
+                print("yay!")
+            else:
+                print('Please enter a valid Fishpond URL')
+
+        def test_url_failure(self):
+            """Testing that index error is successfully thrown if list is empty
+                           AKA cannot scrape any results from the webpage"""
+            self.assertRaises(ConnectionError, Scraping_Test.url_failure(self))
 
 
 class CMD_Test(unittest.TestCase):

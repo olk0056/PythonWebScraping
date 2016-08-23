@@ -79,6 +79,14 @@ class CMD_Test(unittest.TestCase):
         """Test errror is correctly thrown is directory is not valid"""
         self.assertRaises(FileNotFoundError,  CMD_Test.saving(self))
 
+    def testing_url_nameerror(self):
+        """Testing that name error is successfully thrown no url
+           has been set before running cmd command"""
+        try:
+            print("Product name: ", Webscraping.product_name(self))
+        except NameError:
+            print("Please set a url")
+        self.assertRaises(NameError, CMD_Test.testing_url_nameerror())
 
 @cleanup
 class Data_Test(unittest.TestCase):

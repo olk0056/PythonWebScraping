@@ -27,73 +27,106 @@ class HelpCMD(cmd.Cmd, Webscraping):
         """
         List of all scraped data, as list
         """
-        print("Product name: ", Webscraping.product_name(self))
-        print("ISBN:  ", Webscraping.isbn(self))
-        print('Publishing Date: ', Webscraping.publishing_date(self))
-        print('RRP ($): ', Webscraping.RRP(self))
-        print('Sale Price ($): ', Webscraping.sale_prices(self))
-        print('Savings : ', Webscraping.saving_total(self))
-        print('Product Photo: ', Webscraping.photo_link(self))
+        try:
+            print("Product name: ", Webscraping.product_name(self))
+            print("ISBN:  ", Webscraping.isbn(self))
+            print('Publishing Date: ', Webscraping.publishing_date(self))
+            print('RRP ($): ', Webscraping.RRP(self))
+            print('Sale Price ($): ', Webscraping.sale_prices(self))
+            print('Savings : ', Webscraping.saving_total(self))
+            print('Product Photo: ', Webscraping.photo_link(self))
+        except NameError:
+            print("Please set a url")
 
     def do_product(self, webscraping):
         """
         List of all scraped product names, as list
          """
-        print("Product name: ", Webscraping.product_name(self))
+        try:
+            print("Product name: ", Webscraping.product_name(self))
+        except NameError:
+            print("Please set a url")
 
     def do_isbn(self, webscraping):
         """
         List of all scraped product ISBN's, as list
         """
-        print("ISBN:  ", Webscraping.isbn(self))
+        try:
+            print("ISBN:  ", Webscraping.isbn(self))
+        except NameError:
+            print("Please set a url")
 
     def do_savings(self, webscraping):
         """
         List of all scraped savings, as list
         """
-        print('Savings : ', Webscraping.saving_total(self))
+        try:
+            print('Savings : ', Webscraping.saving_total(self))
+        except NameError:
+            print("Please set a url")
 
     def do_publish(self, webscraping):
         """
         List of all scraped product's Publishing Date, as list
         """
-        print('Publishing Date: ', Webscraping.publishing_date(self))
+        try:
+            print('Publishing Date: ', Webscraping.publishing_date(self))
+        except NameError:
+            print("Please set a url")
 
     def do_rrp(self, webscraping):
         """
         List of all scraped product RRP, as list
         """
-        print('Normal Price ($): ', Webscraping.RRP(self))
+        try:
+            print('Normal Price ($): ', Webscraping.RRP(self))
+        except NameError:
+            print("Please set a url")
 
     def do_sale(self, webscraping):
         """
         List of all scraped product's Sale Price, as list
         """
-        print('Sale Price ($): ', Webscraping.sale_prices(self))
+        try:
+            print('Sale Price ($): ', Webscraping.sale_prices(self))
+        except NameError:
+            print("Please set a url")
 
     def do_image(self, webscraping):
         """
         List of all scraped product's relevant image, as url list
         """
-        print('Product Photo: ', Webscraping.photo_link(self))
+        try:
+            print('Product Photo: ', Webscraping.photo_link(self))
+        except NameError:
+            print("Please set a url")
 
     def do_pricecomparison(self, webscraping):
         """
         Graphical comparison of RRP and Sale Price for all products
         """
-        Data_Methods.price_comparison(self)
+        try:
+            Data_Methods.price_comparison(self)
+        except NameError:
+            print("Please set a url")
 
     def do_totalsavingsdata(self, webscraping):
         """
         Graph showing the savings (%) of all the products scraped
         """
-        Data_Methods.total_savings_data(self)
+        try:
+            Data_Methods.total_savings_data(self)
+        except NameError:
+            print("Please set a url")
 
     def do_publishingdata(self, webscraping):
         """
         Pie chart showing a breakdown publishing dates by month
         """
-        Data_Methods.publishing_data(self)
+        try:
+            Data_Methods.publishing_data(self)
+        except NameError:
+            print("Please set a url")
 
     def do_quit(self, webscraping):
         """
@@ -111,36 +144,39 @@ class HelpCMD(cmd.Cmd, Webscraping):
         :data types: Product Name, ISBN, Publish Date, Normal Price,
                     Sale Price, Savings, Photos, All
         """
-        results = Webscraping()
-        save_path = input("What is the directory?: ")
         try:
-            name_of_file = input("What is the name of the file: ")
-            type = input("What data type do you want to save?: ")
-            if type == 'Product Name':
-                save = results.product_name()
-            elif type == 'ISBN':
-                save = results.isbn()
-            elif type == "Publish Date":
-                save = results.publishing_date()
-            elif type == 'Normal Price':
-                save = results.RRP()
-            elif type == 'Sale Price':
-                save = results.sale_prices()
-            elif type == 'Savings':
-                save = results.saving_total()
-            elif type == 'Photos':
-                save = results.photo_link()
-            elif type == "Save all":
-                save = (results.product_name(), results.isbn(), results.RRP(),
-                        results.sale_prices(),
-                        results.saving_total(), results.photo_link())
-            complete_name = os.path.join(save_path, name_of_file + ".txt")
-            file1 = open(complete_name, "wb")
-            pickle.dump(save, file1)
-            file1.close()
-        except FileNotFoundError:
-                print("Please enter a valid save directory")
-
+            results = Webscraping()
+            save_path = input("What is the directory?: ")
+            try:
+                name_of_file = input("What is the name of the file: ")
+                type = input("What data type do you want to save?: ")
+                if type == 'Product Name':
+                    save = results.product_name()
+                elif type == 'ISBN':
+                    save = results.isbn()
+                elif type == "Publish Date":
+                    save = results.publishing_date()
+                elif type == 'Normal Price':
+                    save = results.RRP()
+                elif type == 'Sale Price':
+                    save = results.sale_prices()
+                elif type == 'Savings':
+                    save = results.saving_total()
+                elif type == 'Photos':
+                    save = results.photo_link()
+                elif type == "Save all":
+                    save = (results.product_name(), results.isbn(), results.RRP(),
+                            results.sale_prices(),
+                            results.saving_total(), results.photo_link())
+                complete_name = os.path.join(save_path, name_of_file + ".txt")
+                file1 = open(complete_name, "wb")
+                pickle.dump(save, file1)
+                file1.close()
+            except FileNotFoundError:
+                    print("Please enter a valid save directory")
+        except NameError:
+            print("Please set a url")
+            
     def do_loadfile(self, webscraping):
         """
         Loads data from previously saved file

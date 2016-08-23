@@ -19,84 +19,107 @@ class HelpCMD(cmd.Cmd, Webscraping):
     def do_seturl(self, url):
         """
         Set URL of Fishpond page to scrap information from
-        :return: Input
          """
         URL.go(self)
 
     def do_product(self, webscraping):
         """
-        List of all scraped product names, as list
-        :return: Product Name
+        List of all scraped product names, printed as 'Product i : Product Name
          """
-        print("Product name: ", Webscraping.product_name(self))
+        r = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+        i = len(Webscraping.product_name(self))
+        while (i < 20):
+            for i in r: (print("Product {} : ".format(i),
+                               Webscraping.product_name(self)[i - 2]))
+            i += 1
 
     def do_isbn(self, webscraping):
         """
-        List of all scraped product ISBN's, as list
-        :return: Book ISBN
+        List of all scraped product ISBN's, printed as 'ISBN for Product i : ISBN'
         """
-        print("ISBN:  ", Webscraping.isbn(self))
+        r = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+        i = len(Webscraping.product_name(self))
+        while (i < 20):
+            for i in r: (print("ISBN for Product {} : ".format(i),
+                               Webscraping.isbn(self)[i - 2]))
+            i += 1
 
     def do_savings(self, webscraping):
         """
         List of all scraped savings, as list
-        :return: Savings
         """
-        print('Savings : ', Webscraping.saving_total(self))
+        r = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+        i = len(Webscraping.product_name(self))
+        while (i < 20):
+            for i in r: (print("Savings for Product {} (%): ".format(i),
+                               Webscraping.saving_total(self)[i - 2]))
+            i += 1
 
     def do_publish(self, webscraping):
         """
         List of all scraped product's Publishing Date, as list
-        :return: Publishing Date
         """
-        print('Publishing Date: ', Webscraping.publishing_date(self))
+        r = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+        i = len(Webscraping.product_name(self))
+        while (i < 20):
+            for i in r: (print("Publishing Date for Product {}: ".format(i),
+                               Webscraping.publishing_date(self)[i - 2]))
+            i += 1
 
     def do_rrp(self, webscraping):
         """
         List of all scraped product RRP, as list
-        :return: RRP
         """
-        print('Normal Price ($): ', Webscraping.RRP(self))
+        r = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+        i = len(Webscraping.product_name(self))
+        while (i < 20):
+            for i in r: (print("RRP for Product {} ($): ".format(i),
+                               Webscraping.RRP(self)[i - 3]))
+            i += 1
 
     def do_sale(self, webscraping):
         """
         List of all scraped product's Sale Price, as list
-        :return: Sale Price
         """
-        print('Sale Price ($): ', Webscraping.sale_prices(self))
+        r = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+        i = len(Webscraping.product_name(self))
+        while (i < 20):
+            for i in r: (print("Sale Price for Product {} ($): ".format(i),
+                               Webscraping.sale_prices(self)[i - 2]))
+            i += 1
 
     def do_image(self, webscraping):
         """
         List of all scraped product's relevant image, as url list
-        :return: Product's Image
         """
-        print('Product Photo: ', Webscraping.photo_link(self))
+        r = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+        i = len(Webscraping.product_name(self))
+        while (i < 20):
+            for i in r: (print("Photo Link for Product {}: ".format(i),
+                               Webscraping.photo_link(self)[i - 2]))
+            i += 1
 
     def do_pricecomparison(self, webscraping):
         """
         Graphical comparison of RRP and Sale Price for all products
-        :return: Graph
         """
         Data_Methods.price_comparison(self)
 
     def do_totalsavingsdata(self, webscraping):
         """
         Graph showing the savings (%) of all the products scraped
-        :return: Graph
         """
         Data_Methods.total_savings_data(self)
 
     def do_publishingdata(self, webscraping):
         """
         Pie chart showing a breakdown publishing dates by month
-        :return: Graph
         """
         Data_Methods.publishing_data(self)
 
     def do_quit(self, webscraping):
         """
         Quit from my CMD
-        :return: True
         """
         print("Quitting ......")
         return True
@@ -109,7 +132,6 @@ class HelpCMD(cmd.Cmd, Webscraping):
         Saves information scraped to txt file
         :data types: Product Name, ISBN, Publish Date, Normal Price,
                     Sale Price, Savings, Photos, All
-        :return: None
         """
         results = Webscraping()
         save_path = input("What is the directory?: ")
@@ -144,7 +166,6 @@ class HelpCMD(cmd.Cmd, Webscraping):
     def do_loadfile(self, webscraping):
         """
         Loads data from previously saved file
-        :return: Data
         """
         infile = input("Please enter the file path: ")
         try:

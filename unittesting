@@ -1,70 +1,88 @@
 import unittest
-from scraping import Webscraping
-import Data_Methods
+from Data_Methods import *
 import re
 from matplotlib import pyplot as plt
 from matplotlib.testing.decorators import cleanup
+from bs4 import BeautifulSoup
 import requests
-
 
 @unittest.skip("showing class skipping")
 class MySkippedTestCase(unittest.TestCase):
     def test_not_run(self):
         pass
 
-
 class Scraping_Test(unittest.TestCase):
+    def test_publishing(self):
+        """check that string stripper successfully removes numbers
+        from publishing date, to be used for graphing results"""
+        r = requests.get("http://www.fishpond.co.nz/Books/Fiction_Literature")
+        soup = BeautifulSoup(r.content, "lxml")
+        publishing_date_results = []
+        for dates in soup.find_all("div", {"class": "productSearch-metainfo"}):
+            try:
+                publishing_date_results.append(dates.text.split(',', 1)[-1])
+            except IndexError:
+                print("No publishing dates found")
+        date = publishing_date_results[1]
+        date = date.split(',', 1)[-1]
+        test = re.findall(r"(?i)\b[a-z]+\b", date)
+        self.assertTrue(str(test), 'July')
 
-        def test_publishing(self):
-            """check that string stripper successfully removes numbers
-            from publishing date, to be used for graphing results"""
-            date = Webscraping.publishing_date(self)[1]
-            date = date.split(',', 1)[-1]
-            test = re.findall(r"(?i)\b[a-z]+\b", date)
-            self.assertTrue(str(test), 'July')
+    def test_RRP(self):
+        """testing output of both RRP"""
+        r = requests.get("http://www.fishpond.co.nz/Books/Fiction_Literature")
+        soup = BeautifulSoup(r.content, "lxml")
+        rrp_results = []
+        for rrp in soup.find_all('s'):
+            try:
+                rrp_results.append(rrp.text[1:])
+            except IndexError:
+                print("No RRP found")
+        price = rrp_results[1].isdigit()
+        self.assertFalse(price, int)
 
-        def test_RRP(self):
-            """testing output of both RRP"""
-            price = Webscraping.RRP(self)[1].isdigit()
-            self.assertFalse(price, int)
+    def test_RRP2(self):
+        """testing output of RRP with $ removed"""
+        r = requests.get("http://www.fishpond.co.nz/Books/Fiction_Literature")
+        soup = BeautifulSoup(r.content, "lxml")
+        rrp_results = []
+        for rrp in soup.find_all('s'):
+            try:
+                rrp_results.append(rrp.text[1:])
+            except IndexError:
+                print("No RRP found")
+        price = rrp_results[1].split(',', 1)[-1]
+        self.assertTrue(price, int)
 
-        def test_RRP2(self):
-            """testing output of RRP with $ removed"""
-            price = Webscraping.RRP(self)[1].split(',', 1)[-1]
-            self.assertTrue(price, int)
+    def product_failure(self):
+        """Testing that index error is successfully thrown if list is empty
+            AKA cannot scrape any results from the webpage"""
+        savings_results = [0]
+        for savings in savings_results:
+            try:
+                print("Yay!")
+            except IndexError:
+                print("No savings found")
 
-        def product_failure(self):
-            """Testing that index error is successfully thrown if list is empty
-                AKA cannot scrape any results from the webpage"""
-            savings_results = [0]
-            for savings in savings_results:
-                try:
-                    print("Yay!")
-                except IndexError:
-                    print("No savings found")
+    def test_product_failure(self):
+        """Testing that index error is successfully thrown if list is empty
+                       AKA cannot scrape any results from the webpage"""
+        self.assertRaises(IndexError, Scraping_Test.product_failure(self))
 
-        def test_product_failure(self):
-            """Testing that index error is successfully thrown if list is empty
-                           AKA cannot scrape any results from the webpage"""
-            self.assertRaises(IndexError, Scraping_Test.product_failure(self))
+    def url_failure(self):
+        """Testing that index error is successfully thrown if list is empty
+            AKA cannot scrape any results from the webpage"""
+        chars = set('fishpond')
+        r = requests.get('http://www.google.com')
+        if ((c in chars) for c in r) and r.status_code == 200:
+            print("yay!")
+        else:
+            print('Please enter a valid Fishpond URL')
 
-        def url_failure(self):
-            """Testing that index error is successfully thrown if list is empty
-                AKA cannot scrape any results from the webpage"""
-            chars = set('fishpond')
-            r = requests.get('http://www.google.com')
-            if ((c in chars) for c in r) and r.status_code == 200:
-                print("yay!")
-            else:
-                print('Please enter a valid Fishpond URL')
-
-        def test_url_failure(self):
-            """Testing that index error is successfully thrown if list is empty
-                           AKA cannot scrape any results from the webpage"""
-            self.assertRaises(ConnectionError, Scraping_Test.url_failure(self))
-
-
-class CMD_Test(unittest.TestCase):
+    def test_url_failure(self):
+        """Testing that index error is successfully thrown if list is empty
+                       AKA cannot scrape any results from the webpage"""
+        self.assertRaises(ConnectionError, Scraping_Test.url_failure(self))
 
     def saving(self):
         """Test errror is correctly thrown is directory is not valid"""
@@ -77,25 +95,19 @@ class CMD_Test(unittest.TestCase):
 
     def test_saving(self):
         """Test errror is correctly thrown is directory is not valid"""
-        self.assertRaises(FileNotFoundError,  CMD_Test.saving(self))
+        self.assertRaises(FileNotFoundError, self.saving())
+
+    def url_cmd(self):
+        url = None
+        try:
+            print("Product name: ", url)
+        except NameError:
+            print("Please set a url")
 
     def testing_url_nameerror(self):
         """Testing that name error is successfully thrown no url
            has been set before running cmd command"""
-        try:
-            print("Product name: ", Webscraping.product_name(self))
-        except NameError:
-            print("Please set a url")
-        self.assertRaises(NameError, CMD_Test.testing_url_nameerror())
-
-@cleanup
-class Data_Test(unittest.TestCase):
-    """Testing that all graphs successfully print"""
-    def test_create_figure(self):
-        fig = plt.figure()
-        self.assertEqual(Data_Methods.price_comparison() == fig)
-        self.assertEqual(Data_Methods.total_savings_data() == fig)
-        self.assertEqual(Data_Methods.publishing_data() == fig)
+        self.assertRaises(NameError, self.url_cmd())
 
 if __name__ == '__main__':
     unittest.main()

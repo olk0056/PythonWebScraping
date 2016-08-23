@@ -51,8 +51,9 @@ class Scraping_Test(unittest.TestCase):
         def url_failure(self):
             """Testing that index error is successfully thrown if list is empty
                 AKA cannot scrape any results from the webpage"""
+            chars = set('fishpond')
             r = requests.get('http://www.google.com')
-            if re.findall("fishpond", str(r)) and r.status_code == 200:
+            if ((c in chars) for c in r) and r.status_code == 200:
                 print("yay!")
             else:
                 print('Please enter a valid Fishpond URL')

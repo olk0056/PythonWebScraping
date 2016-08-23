@@ -2,6 +2,7 @@ from bs4 import BeautifulSoup
 import requests
 import sys
 
+
 class URL(object):
 
     def go(self):
@@ -9,7 +10,7 @@ class URL(object):
         chars = set('fishpond')
         r = requests.get(input("Please enter a Fishpond URL: "))
         if ((c in chars) for c in r) and r.status_code == 200:
-             soup = BeautifulSoup(r.content, "lxml")
+            soup = BeautifulSoup(r.content, "lxml")
         else:
             print('Please enter a valid Fishpond URL')
             sys.exit(0)
@@ -19,8 +20,7 @@ class Webscraping(object):
 
     def product_name(self):
         product_name_results = []
-        for product_name in soup.find_all("a",
-            {"class": "blue_link fn url"}):
+        for product_name in soup.find_all("a", {"class": "blue_link fn url"}):
             try:
                 product_name_results.append(product_name.text)
             except IndexError:
@@ -38,8 +38,7 @@ class Webscraping(object):
 
     def publishing_date(self):
         publishing_date_results = []
-        for dates in soup.find_all("div",
-                                         {"class": "productSearch-metainfo"}):
+        for dates in soup.find_all("div", {"class": "productSearch-metainfo"}):
             try:
                 publishing_date_results.append(dates.text.split(',', 1)[-1])
             except IndexError:
@@ -58,7 +57,7 @@ class Webscraping(object):
     def sale_prices(self):
         sale_price_results = []
         for salePrice in soup.find_all("span",
-                                             {"class": "productSpecialPrice"}):
+                                       {"class": "productSpecialPrice"}):
             try:
                 sale_price_results.append(salePrice.text[1:])
             except IndexError:
@@ -68,10 +67,10 @@ class Webscraping(object):
     def saving_total(self):
         savings_results = []
         for savings in soup.find_all("span",
-                                           {"class": "you_save"}):
+                                     {"class": "you_save"}):
             try:
                 savings_results.append(savings.text.partition
-                        ('(')[-1].rpartition('%')[0])
+                                       ('(')[-1].rpartition('%')[0])
             except IndexError:
                 print("No savings found")
         return savings_results
@@ -84,4 +83,3 @@ class Webscraping(object):
             except IndexError:
                 print("No photo links found")
         return photo_link_results
-        

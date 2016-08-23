@@ -5,38 +5,12 @@ from matplotlib import pyplot as plt
 
 class Data_Methods(Webscraping):
 
-    def table(self, webscraping):
-        # the font table grid
-
-        labelc = ["Product Name", "ISBN", "Publishing Date", "RRP (NZ$)", "Sale Price (NZ$)", "Savings (%)",
-                  "Product Image Link"]
-        labelr = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
-        #plt.figure(figsize=(10, 20))
-        lightgrn = (0.5, 0.8, 0.5)
-        plt.title("Products")
-        the_table = plt.table(cellText=(Webscraping.product_name(self), Webscraping.isbn(self), Webscraping.publishing_date(self),
-                              Webscraping.RRP(self), Webscraping.sale_prices(self), Webscraping.saving_total(self),
-                              Webscraping.photo_link(self)),
-                              rowLabels=labelc,
-                              colLabels=labelr,
-                              rowColours=[lightgrn] * 20,
-                              colColours=[lightgrn] * 20,
-                              cellLoc='center',
-                              loc='center')
-
-        the_table.auto_set_font_size(False)
-        the_table.set_fontsize(10)
-        the_table.scale(1, 4)
-        plt.axis('off')
-        plt.show()
-
 
     def products_table(webscraping):
             fig, axs = plt.subplots(2, 1)
             clust_data = (webscraping.product_name(), webscraping.isbn(), webscraping.publishing_data(), webscraping.RRP(),
                           webscraping.sale_prices(), webscraping.saving_total(), webscraping.photo_link())
-            collabel = ("Product Name", "ISBN", "Publishing Date", "RRP (NZ$)", "Sale Price (NZ$)", "Savings (%)",
-                        "Product Image Link")
+            collabel = ("Product Name", "ISBN", "Publishing Date", "RRP (NZ$)", "Sale Price (NZ$)", "Savings (%)")
             axs[0].axis('tight')
             axs[0].axis('off')
             the_table = axs[0].table(cellText=clust_data, colLabels=collabel, loc='center')
@@ -161,4 +135,3 @@ class Data_Methods(Webscraping):
 
             plt.axis('equal')
             plt.show()
-            
